@@ -97,7 +97,7 @@ Follow these steps to build the frontend assets and deploy them to your DXA webs
         <link rel="icon" href="/content/img/favicon.ico">
         
         <!-- XPMLITE START-->
-        <link rel="stylesheet" href="/content/xpmlite/css/dxa-inline-DyksLmT8.css">
+        <link rel="stylesheet" href="/content/xpmlite/css/dxa-inline-RzZ2T0UD.css">
         <link rel="stylesheet" href="/content/xpmlite/css/dxa-xpmlite-BLyZ_BF3.css">
         <!-- XPMLITE END -->
         
