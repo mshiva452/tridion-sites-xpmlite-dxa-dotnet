@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { ConfigProvider, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import dayjs, { Dayjs } from "dayjs";
@@ -7,11 +7,11 @@ import { useAppDispatch, useAppSelector } from "../../store/connect";
 import { setLoading, setPublishDate } from "../../store/publish/publishSlice";
 import AdditionalSettings from "./AdditionalSettings";
 import General from "./General";
-import Loading from "../Loading";
 import formatTcmId from "../../utils/formatTcmId";
 import getService from "../../Services/getRequest";
 import postService from "../../Services/postRequest";
 import { IPublishData } from "../../model/PageModel";
+import { setErrorMessage } from "../../store/pageBuilder/pageBuilderSlice";
 
 interface IPublishProps {
 	isPublishable: boolean;
@@ -60,13 +60,11 @@ const PublishContainer = ({ isPublishable, pageIdToPublish }: IPublishProps) => 
 		publishToCurrentPublication,
 		publishDate,
 		additionalSettings,
-		isLoading
 	} = useAppSelector((state) => state.publishReducer);
 	const { pageId } = useAppSelector(state => state.pageReducer)
 	const dispatch = useAppDispatch();
 	const currentDate = new Date();
 	const formatDate = dayjs(currentDate);
-	const [publishStatus, setPublishStatus] = useState<string>();
 
 	useEffect(() => {
 		publishPage();
@@ -105,11 +103,11 @@ const PublishContainer = ({ isPublishable, pageIdToPublish }: IPublishProps) => 
 				if (publishResponse?.status === 202) {
 					const publishQueueId = formatTcmId(publishResponse.data.PublishTransactionIds[0]);
 					const publishStatusResponse = await getPagePublishStatus(publishQueueId);
-					setPublishStatus(publishStatusResponse.data.State)
+					//setPublishStatus(publishStatusResponse.data.State)
 					if (!publishStatusResponse.data.IsCompleted && publishStatusResponse.data.State !== "Success") {
 						const timeInterval = setInterval(async () => {
 							const response = await getPagePublishStatus(publishQueueId);
-							setPublishStatus(response.data.State)
+							//setPublishStatus(response.data.State)
 							if (response.data.IsCompleted && response.data.State === "Success") {
 								clearInterval(timeInterval);
 								dispatch(setLoading(false))
@@ -119,6 +117,7 @@ const PublishContainer = ({ isPublishable, pageIdToPublish }: IPublishProps) => 
 								window.open(publishedPageUrl.data[0].Uri, "_self")
 							} else if (response.data.IsCompleted && response.data.State === "Failed") {
 								clearInterval(timeInterval);
+								dispatch(setErrorMessage(response.data.Information))
 								dispatch(setLoading(false))
 							}
 							else if (publishStatusResponse.data.State === "ScheduledForDeployment") {
@@ -131,6 +130,7 @@ const PublishContainer = ({ isPublishable, pageIdToPublish }: IPublishProps) => 
 				}
 			} catch (err) {
 				console.log(err);
+				dispatch(setErrorMessage(`Failed to publish the Page:${err}`))
 				dispatch(setLoading(false))
 			}
 		}
@@ -155,7 +155,6 @@ const PublishContainer = ({ isPublishable, pageIdToPublish }: IPublishProps) => 
 	return (
 		<ConfigProvider theme={{ components: themeStyle }}>
 			<div style={{ padding: "0px 10px", textAlign: "left" }}>
-				{isLoading ? <Loading status={publishStatus} /> : null}
 				<Tabs defaultActiveKey="1" items={items} />
 			</div>
 		</ConfigProvider>

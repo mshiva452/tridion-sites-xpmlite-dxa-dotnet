@@ -96,10 +96,10 @@ const PageTreeview = () => {
                         : currentSchemaId;
 
                 const childRegionNodes = await constructTreeData(region.Regions || [], nextSchemaId);
-
+                
                 return {
                     type: region.$type || "EmbeddedRegion",
-                    title: `${region?.RegionName || "Unknown Region"} ${limit}`,
+                    title: `${region?.RegionName} ${limit}`,
                     key: currentRegionKey,
                     id: region.RegionSchema?.IdRef || region.RegionName,
                     maxOccurrenceConstraint: maxOccurs,

@@ -47,7 +47,7 @@ const FolderTreeviewActionButtons = ({ updatePageData, handleCancel }: ActionBut
             const componentResponse = await getService.getItems(tcmid);
             if (componentResponse.status === 200) {
                 const jsonData = structuredClone(pageInfoData);
-                
+
                 if (jsonData && jsonData.Regions) {
                     const componentTemplate = {
                         Title: updatedComponentTemplate !== undefined
@@ -58,9 +58,9 @@ const FolderTreeviewActionButtons = ({ updatePageData, handleCancel }: ActionBut
                             : (selectedComponentTemplate.length !== 0 ? selectedComponentTemplate[0].IdRef as string : "tcm:0-0-0")
                     };
 
-                    const structuralTitle = componentResponse.data?.Title || 
-                                            componentResponse.data?.Component?.Title || 
-                                            `Component (${selectedComponentRowKeys[0]})`;
+                    const structuralTitle = componentResponse.data?.Title ||
+                        componentResponse.data?.Component?.Title ||
+                        `Component (${selectedComponentRowKeys[0]})`;
 
                     const newComponentPresentation = {
                         "$type": "ComponentPresentation",
@@ -80,23 +80,23 @@ const FolderTreeviewActionButtons = ({ updatePageData, handleCancel }: ActionBut
 
                     const insertComponentDeep = (regions: any[]): boolean => {
                         if (!regions) return false;
-                        
+
                         for (let i = 0; i < regions.length; i++) {
                             const region = regions[i];
-                            
-                            const isMatch = region.RegionSchema?.IdRef === selectedKeys.key || 
-                                            region.RegionName === selectedKeys.key;
+
+                            const isMatch = region.RegionSchema?.IdRef === selectedKeys.key ||
+                                region.RegionName === selectedKeys.key;
 
                             if (isMatch) {
                                 if (!region.ComponentPresentations) {
                                     region.ComponentPresentations = [];
                                 }
                                 region.ComponentPresentations.push(newComponentPresentation);
-                                return true; 
+                                return true;
                             }
-                            
+
                             if (region.Regions && insertComponentDeep(region.Regions)) {
-                                return true; 
+                                return true;
                             }
                         }
                         return false;
@@ -105,7 +105,7 @@ const FolderTreeviewActionButtons = ({ updatePageData, handleCancel }: ActionBut
                     const isInserted = insertComponentDeep(jsonData.Regions);
 
                     if (isInserted && typeof updatePageData === "function") {
-                        updatePageData(jsonData); 
+                        updatePageData(jsonData);
                     } else if (!isInserted) {
                         console.warn(`Could not find a valid matching layout block container for: ${selectedKeys.key}`);
                     }

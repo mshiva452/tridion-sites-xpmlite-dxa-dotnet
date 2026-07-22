@@ -1,13 +1,11 @@
-import { useState } from 'react'
 import { Button } from "antd";
 import { DeleteOutlined, PlusOutlined, SaveOutlined } from "@ant-design/icons";
 
 import { useAppDispatch, useAppSelector } from "../../store/connect";
-import { setModalTreeView } from '../../store/pageInfo/pageInfoSlice';
+import { setLoading, setModalTreeView } from '../../store/pageInfo/pageInfoSlice';
 
 import Publish from "../Publish/Index"
 import formatTcmId from "../../utils/formatTcmId";
-import Loading from '../Loading';
 import postService from "../../Services/postRequest";
 import putService from '../../Services/putRquest';
 
@@ -18,7 +16,7 @@ interface PageInfoActionButtonsProps {
 const PageInfoActionButtons = ({ deletePageComponent }: PageInfoActionButtonsProps) => {
     const dispatch = useAppDispatch()
     const { pageInfoData, selectedKeys, toggleModalTreeView } = useAppSelector(state => state.pageInfoReducer);
-    const [isLoading, setLoading] = useState<boolean>(false);
+
 
     const updatePage = async () => {
         try {
@@ -72,7 +70,7 @@ const PageInfoActionButtons = ({ deletePageComponent }: PageInfoActionButtonsPro
 
     return (
         <>
-            {isLoading && <Loading />}
+            {/* isLoading && <Loading /> */}
             <Publish />
             <Button
                 className="drawer-btn"

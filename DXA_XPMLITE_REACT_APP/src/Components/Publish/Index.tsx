@@ -40,7 +40,8 @@ const themeStyle = {
     }
 }
 const Publish = () => {
-    const { selectedPublishingTarget, publishToCurrentPublication, selectedChildPublications } = useAppSelector(state => state.publishReducer)
+    const { selectedPublishingTarget, publishToCurrentPublication, selectedChildPublications, isLoading } = useAppSelector(state => state.publishReducer)
+    const {isLoading:pageInfoLoading} = useAppSelector(state => state.pageInfoReducer)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isPublishable, setPublishable] = useState<boolean>(false)
     const showModal = () => {
@@ -50,7 +51,7 @@ const Publish = () => {
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-
+    const isPublishAllowed = selectedPublishingTarget.length === 0 || (publishToCurrentPublication === false && selectedChildPublications.length === 0)
     return (
         <ConfigProvider theme={{ components: themeStyle }}>
             <Button
@@ -59,7 +60,6 @@ const Publish = () => {
                 className="drawer-btn"
                 type="default"
                 size='middle'
-                // icon={<GlobalOutlined style={{ fontSize: 15 }} className='treeViewIcon' />}
                 title='Publish'
             >
                 Publish
@@ -72,7 +72,12 @@ const Publish = () => {
                 onCancel={handleCancel}
                 footer={
                     [
-                        <Button key={1} onClick={() => setPublishable(true)} type='primary' disabled={selectedPublishingTarget.length === 0 || (publishToCurrentPublication === false && selectedChildPublications.length === 0)}>Publish</Button>,
+                        <Button 
+                            key={1}
+                            loading={isLoading || pageInfoLoading} 
+                            onClick={() => setPublishable(true)} 
+                            type='primary' 
+                            disabled={isPublishAllowed}>Publish</Button>,
                         <Button key={2} onClick={handleCancel}>Cancel</Button>
                     ]
                 }

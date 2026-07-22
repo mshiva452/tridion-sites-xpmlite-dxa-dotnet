@@ -19,7 +19,7 @@ interface PageTemplateProps {
 const mandatoryStarStyle: React.CSSProperties = {
     fontSize: '5px',
     verticalAlign: 'super',
-    color: '#ff4d4f', // Standard Ant Design error/mandatory crimson hex
+    color: '#ff4d4f',
 };
 
 const fullWidthStyle: React.CSSProperties = {
@@ -43,7 +43,7 @@ const PageCreationForm: React.FC<PageTemplateProps> = ({ pageTemplate, getPageTe
     }, [pageTypes])
 
     useEffect(() => {
-        const activeTemplate = pageTemplate?.[0];
+        const activeTemplate = pageTemplate;
         if (activeTemplate) {
             if (activeTemplate.PageTemplate) {
                 dispatch(setSelectedPageTemplate({
@@ -53,8 +53,8 @@ const PageCreationForm: React.FC<PageTemplateProps> = ({ pageTemplate, getPageTe
             }
             if (activeTemplate.RegionSchema) {
                 dispatch(setSelectedPageSchema({
-                    label: pageTemplate[0].RegionSchema.Title,
-                    value: pageTemplate[0].RegionSchema.IdRef
+                    label: pageTemplate.RegionSchema.Title,
+                    value: pageTemplate.RegionSchema.IdRef
                 }))
             }
 
@@ -64,7 +64,6 @@ const PageCreationForm: React.FC<PageTemplateProps> = ({ pageTemplate, getPageTe
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         dispatch(setFormData({
-            ...formData,
             [name]: value
         }))
     }
@@ -96,14 +95,14 @@ const PageCreationForm: React.FC<PageTemplateProps> = ({ pageTemplate, getPageTe
             </div>
             <div>
                 <label>
-                    FileName
+                    File Name
                     <StarFilled style={mandatoryStarStyle} />
                 </label>
                 <Input
                     type="text"
                     name='filename'
                     value={formData.filename ?? ""}
-                    placeholder="FileName"
+                    placeholder="File Name"
                     addonAfter=".html"
                     onChange={handleInputChange}
                 />

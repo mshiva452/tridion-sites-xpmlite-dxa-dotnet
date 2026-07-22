@@ -5,7 +5,7 @@ import { DataNode } from 'antd/es/tree';
 import { Icon, Icons } from '../../resources/icons';
 import { useAppSelector } from '../../store/connect';
 
-interface TridionItemPayload {
+export interface TridionItemPayload {
     $type?: string;
     Title?: string;
     RegionName?: string;
